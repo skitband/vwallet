@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use Illuminate\Http\Request;
 use App\Models\Wallet;
 use App\Models\Transaction;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\CreateWalletRequest;
+use App\Http\Requests\TransactionRequest;
 
-class WalletController extends Controller
+class TransactionController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,11 +16,8 @@ class WalletController extends Controller
      */
     public function index()
     {
-        // get authenticated user id
-        $id = auth()->id();
-        $wallet = User::find($id)->wallet;
-
-        return $wallet;
+        //
+        
     }
 
     /**
@@ -33,7 +28,7 @@ class WalletController extends Controller
     public function create()
     {
         //
-        return view('wallet.create');
+        return view('transaction.create', ['name' => 'Victoria']);
     }
 
     /**
@@ -42,17 +37,16 @@ class WalletController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CreateWalletRequest $request)
+    public function store(TransactionRequest $request)
     {
-        $wallet = new Wallet;
-        $id = auth()->id();
+        //
+        $transaction = new Transaction;
 
-        $wallet->wallet_name = $request->wallet_name;
-        $wallet->wallet_description = $request->wallet_description;
-        $wallet->wallet_balance = 0;
-        $wallet->user_id = $id;
+        $transaction->transaction_type = $request->transaction_type;
+        $transaction->transaction_amount = $request->transaction_amount;
+        $transaction->wallet_id = $request->wallet_id;
 
-        $wallet->save();
+        $transaction->save();
 
         return response()->json(['message' => 'success']);
     }
@@ -66,7 +60,6 @@ class WalletController extends Controller
     public function show($id)
     {
         //
-        return view('wallet.edit');
     }
 
     /**
@@ -78,9 +71,6 @@ class WalletController extends Controller
     public function edit($id)
     {
         //
-        $wallet = Wallet::find($id);
-
-        return response()->json(['result' => $wallet]);
     }
 
     /**
@@ -92,13 +82,12 @@ class WalletController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Update Wallet Details
-        $wallet = Wallet::find($id);
+        //
+        $transaction = Transaction::find($id);
 
-        $wallet->wallet_name = $request->wallet_name;
-        $wallet->wallet_description = $request->wallet_description;
+        $transaction->transaction_isFraud = 1;
 
-        $wallet->save();
+        $transaction->save();
 
         return response()->json(['message' => 'success']);
     }
@@ -112,22 +101,18 @@ class WalletController extends Controller
     public function destroy($id)
     {
         //
-        $wallet = Wallet::find($id);
+        $transaction = Transaction::find($id);
 
-        $wallet->delete();
+        $transaction->delete();
 
         return response()->json(['result' => 'success']);
     }
 
-    public function walletTransaction($id)
+    public function create_transaction_wallet($id)
     {
-        return view('transaction.index');
-    }
+        //
+        $wallet = Wallet::find($id);
 
-    public function walletTransactionList($id)
-    {
-        $transaction = Transaction::where('wallet_id', $id)->get();
-
-        return $transaction;
+        return view('transaction.create', ['walletId' => $wallet->id]);
     }
 }

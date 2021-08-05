@@ -6,24 +6,24 @@
             </ul>
         </div>
         <div class="alert alert-success" v-if="success">
-            <p>Wallet Successfully Created!</p>
+            <p>Wallet Successfully Updated!</p>
         </div>
         <form>
             <div class="card">
-                <div class="card-header">Create Wallet</div>
+                <div class="card-header">Edit Wallet</div>
                 <div class="card-body">
                     <div class="mb-3">
                         <label class="form-label">Wallet Name *</label>
-                        <input v-model="formData.wallet_name" type="text" class="form-control" placeholder="Enter Wallet Name">
+                        <input v-model="walletData.wallet_name" type="text" class="form-control" placeholder="Enter Wallet Name">
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Wallet Description (optional)</label>
-                        <textarea v-model="formData.wallet_description" class="form-control" rows="3">Enter Wallet Description</textarea>
+                        <textarea v-model="walletData.wallet_description" class="form-control" rows="3">Enter Wallet Description</textarea>
                     </div>
                 </div>
                 <div class="card-footer">
                     <a class="btn btn-danger" href="/home">Back</a>
-                    <button type="submit" class="btn btn-primary float-right" @click.prevent="createWallet()" v-if="!isBusy">Submit</button>
+                    <button type="submit" class="btn btn-primary float-right" @click.prevent="updateWallet()" v-if="!isBusy">Save</button>
                     <div class="spinner-border text-primary float-right" role="status" v-if="isBusy">
                         <span class="visually-hidden"></span>
                     </div>
@@ -35,12 +35,13 @@
 
 <script>
     export default {
-        name: 'create-wallet-component',
+        name: 'edit-wallet-component',
         data(){
             return{
-                formData: {
+                walletData: {
                     wallet_name: '',
                     wallet_description: '',
+                    wallet_id: ''
                 },
                 errors: [],
                 isBusy: false,
@@ -48,12 +49,28 @@
             }
         },
         mounted() {
-            console.log('Component mounted.')
+            this.getWalletDetails()
         },
         methods: {
-            createWallet() {
+            getWalletDetails() {
+                let url = window.location.pathname;
+                let id = url.substring(url.lastIndexOf('/') + 1);
+                let x = this;
+                axios.get(`/wallet/${id}/edit`)
+                .then(function (response) {
+                    // handle success
+                    x.walletData.wallet_name = response.data.result.wallet_name
+                    x.walletData.wallet_description = response.data.result.wallet_description
+                    x.walletData.wallet_id = response.data.result.id
+                })
+                .catch(function (error) {
+                    // handle error
+                    console.log(error);
+                })
+            },
+            updateWallet() {
                 this.isBusy = true
-                axios.post('/wallet', this.formData)
+                axios.put(`/wallet/${this.walletData.wallet_id}`, this.walletData)
                 .then((response) => {
                     console.log(response)
                     this.errors = ''

@@ -6,24 +6,27 @@
             </ul>
         </div>
         <div class="alert alert-success" v-if="success">
-            <p>Wallet Successfully Created!</p>
+            <p>Transaction Successfully Created!</p>
         </div>
         <form>
             <div class="card">
-                <div class="card-header">Create Wallet</div>
+                <div class="card-header">Create Transaction</div>
                 <div class="card-body">
                     <div class="mb-3">
-                        <label class="form-label">Wallet Name *</label>
-                        <input v-model="formData.wallet_name" type="text" class="form-control" placeholder="Enter Wallet Name">
+                        <label class="form-label">Transaction Type</label>
+                        <select v-model="formData.transaction_type" class="form-control">
+                            <option value="incoming">Incoming</option>
+                            <option value="outgoing">Outgoing</option>
+                        </select>
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Wallet Description (optional)</label>
-                        <textarea v-model="formData.wallet_description" class="form-control" rows="3">Enter Wallet Description</textarea>
+                        <label class="form-label">Transaction Amount </label>
+                        <input v-model="formData.transaction_amount" type="number" class="form-control" placeholder="Enter Transaction Amount">
                     </div>
                 </div>
                 <div class="card-footer">
-                    <a class="btn btn-danger" href="/home">Back</a>
-                    <button type="submit" class="btn btn-primary float-right" @click.prevent="createWallet()" v-if="!isBusy">Submit</button>
+                    <a class="btn btn-danger" :href="`/wallet/transaction/${walletId}`">Back</a>
+                    <button type="submit" class="btn btn-primary float-right" @click.prevent="createTransaction()" v-if="!isBusy">Submit</button>
                     <div class="spinner-border text-primary float-right" role="status" v-if="isBusy">
                         <span class="visually-hidden"></span>
                     </div>
@@ -35,32 +38,35 @@
 
 <script>
     export default {
-        name: 'create-wallet-component',
+        name: 'create-transaction-component',
+        props: ['walletId'],
         data(){
             return{
                 formData: {
-                    wallet_name: '',
-                    wallet_description: '',
+                    transaction_type: 'incoming',
+                    transaction_amount: '',
+                    wallet_id: this.walletId,
                 },
                 errors: [],
                 isBusy: false,
                 success: false,
+                url: ''
             }
         },
         mounted() {
-            console.log('Component mounted.')
         },
         methods: {
-            createWallet() {
+            createTransaction() {
                 this.isBusy = true
-                axios.post('/wallet', this.formData)
+                axios.post('/transaction', this.formData)
                 .then((response) => {
                     console.log(response)
                     this.errors = ''
                     this.isBusy = false
                     this.success = true
+                    this.url = this.formData.wallet_id
                     setTimeout(function() {
-                        window.location.href = '/home'
+                        history.back();
                     }, 1000);
                 })
                 .catch((errors) => {
