@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,9 +17,11 @@ class WalletController extends Controller
      */
     public function index()
     {
-        //
+        // get authenticated user id
+        $id = auth()->id();
+        $wallet = User::find($id)->wallet;
 
-        return 'hey';
+        return $wallet;
     }
 
     /**
@@ -41,7 +44,7 @@ class WalletController extends Controller
     public function store(CreateWalletRequest $request)
     {
         $wallet = new Wallet;
-        $id = Auth::id();
+        $id = auth()->id();
 
         $wallet->wallet_name = $request->wallet_name;
         $wallet->wallet_description = $request->wallet_description;
@@ -51,7 +54,6 @@ class WalletController extends Controller
         $wallet->save();
 
         return response()->json(['message' => 'success']);
-        // return redirect('home')->with('message','Wallet Created Successfully!');
     }
 
     /**

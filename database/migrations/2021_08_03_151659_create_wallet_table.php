@@ -17,7 +17,7 @@ class CreateWalletTable extends Migration
             $table->id();
             $table->string('wallet_name');
             $table->text('wallet_description');
-            $table->double('wallet_balance', 10, 2);
+            $table->double('wallet_balance', 10, 2)->default(0);
             $table->timestamps();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');

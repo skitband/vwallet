@@ -1,6 +1,15 @@
 <template>
-    <div>
-        
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">Account Dashboard</div>
+
+            <div class="card-body">
+                <a href="/wallet/create" class="btn btn-outline-primary">Create Wallet</a>
+                
+                <wallet-list-component />
+                
+            </div>
+        </div>
     </div>
 </template>
 
@@ -13,7 +22,7 @@
             }
         },
         mounted() {
-            console.log('Component mounted.')
+            
         },
         methods: {
             

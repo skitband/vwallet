@@ -5,6 +5,9 @@
                 <li v-for="error in errors" :key="error.id">{{ error }}</li>
             </ul>
         </div>
+        <div class="alert alert-success" v-if="success">
+            <p>Wallet Successfully Created!</p>
+        </div>
         <form>
             <div class="card">
                 <div class="card-header">Create Wallet</div>
@@ -41,6 +44,7 @@
                 },
                 errors: [],
                 isBusy: false,
+                success: false,
             }
         },
         mounted() {
@@ -54,6 +58,10 @@
                     console.log(response)
                     this.errors = ''
                     this.isBusy = false
+                    this.success = true
+                    setTimeout(function() {
+                        window.location.href = '/home'
+                    }, 1000);
                 })
                 .catch((errors) => {
                     // console.dir(errors)

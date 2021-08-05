@@ -23,8 +23,9 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
 
 
 // Wallet
-Vue.component('wallet-message-component', require('./components/WalletComponent.vue').default);
+Vue.component('wallet-component', require('./components/WalletComponent.vue').default);
 Vue.component('create-wallet-component', require('./components/CreateWalletComponent.vue').default);
+Vue.component('wallet-list-component', require('./components/WalletListComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
