@@ -1,0 +1,28 @@
+version: '2'
+
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.2
+    ports:
+      - "33063:3306"
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=vroot
+      - MARIADB_DATABASE=vwallet
+      - MARIADB_PASSWORD=
+
+  vwallet:
+    tty: true
+    image: docker.io/bitnami/laravel:8
+    environment:
+      - DB_HOST=mariadb
+      - DB_USERNAME=vroot
+      - DB_DATABASE=vwallet
+      - DB_PASSWORD=
+    depends_on:
+      - mariadb
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app
+    # privileged: true # Privileged mode could be required to run this container under Windows
