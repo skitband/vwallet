@@ -9,12 +9,24 @@
 
 ## About VWallet
 
+## To Install
+
 Run Command
 $ docker-compose up
 
-Node Modules for Vue
+## Node Modules for Vue
+
 $ docker compose exec vwallet npm install
 
+
 $ docker compose exec vwallet npm run dev
+
+
+## Database Migration
+
+$ docker compose exec vwallet php artisan migrate
+
+
+## Authentication Default Laravel AUTH Scaffolding
 
 
