@@ -2256,6 +2256,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'transaction-component',
   data: function data() {
@@ -2332,17 +2335,31 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'WalletListComponent',
   data: function data() {
     return {
       transactions: [],
       success: false,
-      fraudMsg: false
+      fraudMsg: false,
+      total: {
+        incoming: 0,
+        outgoing: 0
+      }
     };
   },
   mounted: function mounted() {
     this.getTransactions();
+    this.sumTransactions();
   },
   methods: {
     getTransactions: function getTransactions() {
@@ -2352,6 +2369,20 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("/wallet/transactionlist/".concat(id)).then(function (response) {
         // handle success
         x.transactions = response.data;
+        console.log(response);
+      })["catch"](function (error) {
+        // handle error
+        console.log(error);
+      });
+    },
+    sumTransactions: function sumTransactions() {
+      var url = window.location.pathname;
+      var id = url.substring(url.lastIndexOf('/') + 1);
+      var x = this;
+      axios.get("/totaltransactions/".concat(id)).then(function (response) {
+        // handle success
+        x.total.incoming = response.data.incoming;
+        x.total.outgoing = response.data.outgoing;
         console.log(response);
       })["catch"](function (error) {
         // handle error
@@ -39136,9 +39167,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "col-md-12" }, [
     _c("div", { staticClass: "card" }, [
-      _c("div", { staticClass: "card-header" }, [
-        _vm._v("Wallet Transactions")
-      ]),
+      _vm._m(0),
       _vm._v(" "),
       _c(
         "div",
@@ -39160,7 +39189,31 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      {
+        staticClass:
+          "card-header d-flex justify-content-between align-items-center"
+      },
+      [
+        _vm._v("\n            Wallet Transaction\n            "),
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-sm btn-outline-primary",
+            attrs: { href: "/home" }
+          },
+          [_vm._v("Back to Wallet")]
+        )
+      ]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -39272,7 +39325,23 @@ var render = function() {
               ])
             }),
             0
-          )
+          ),
+          _vm._v(" "),
+          _c("tfoot", [
+            _c("tr", [
+              _c("th", [_vm._v("Total Incoming Transactions: ")]),
+              _vm._v(" "),
+              _c("th", { staticClass: "text-right", attrs: { colspan: "2" } }, [
+                _vm._v(" " + _vm._s(_vm.total.incoming.toFixed(2)))
+              ]),
+              _vm._v(" "),
+              _c("th", [_vm._v("Total Outgoing Transactions: ")]),
+              _vm._v(" "),
+              _c("th", { staticClass: "text-right", attrs: { colspan: "2" } }, [
+                _vm._v(" " + _vm._s(_vm.total.outgoing.toFixed(2)))
+              ])
+            ])
+          ])
         ])
       : _vm._e()
   ])

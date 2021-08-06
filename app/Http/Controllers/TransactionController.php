@@ -115,4 +115,17 @@ class TransactionController extends Controller
 
         return view('transaction.create', ['walletId' => $wallet->id]);
     }
+
+    public function total_transactions($id)
+    {
+        $transaction_incoming = Transaction::where('transaction_type', 'incoming')->where('wallet_id', $id)->sum('transaction_amount');
+
+        $transaction_outgoing = Transaction::where('transaction_type', 'outgoing')->where('wallet_id', $id)->sum('transaction_amount');
+
+        return response()->json([
+            'result' => 'success',
+            'incoming' => $transaction_incoming,
+            'outgoing' => $transaction_outgoing,
+        ]);
+    }
 }

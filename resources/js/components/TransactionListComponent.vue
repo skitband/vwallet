@@ -38,6 +38,15 @@
                     
                 </tr>
             </tbody>
+            <tfoot>
+                <tr>
+                    <th>Total Incoming Transactions: </th>
+                    <th colspan="2" class="text-right"> {{ total.incoming.toFixed(2) }}</th>
+                    <th>Total Outgoing Transactions: </th>
+                    <th colspan="2" class="text-right"> {{ total.outgoing.toFixed(2) }}</th>
+                </tr>
+                
+            </tfoot>
         </table>
     </div>
 </template>
@@ -52,10 +61,15 @@ export default {
             transactions: [],
             success: false,
             fraudMsg: false,
+            total: {
+                incoming: 0,
+                outgoing: 0,
+            }
         }
     },
     mounted() {
         this.getTransactions()
+        this.sumTransactions()
     },
     methods: {
         getTransactions() {
@@ -66,6 +80,22 @@ export default {
             .then(function (response) {
                 // handle success
                 x.transactions = response.data
+                console.log(response);
+            })
+            .catch(function (error) {
+                // handle error
+                console.log(error);
+            })
+        },
+        sumTransactions(){
+            let url = window.location.pathname;
+            let id = url.substring(url.lastIndexOf('/') + 1);
+            let x = this;
+            axios.get(`/totaltransactions/${id}`)
+            .then(function (response) {
+                // handle success
+                x.total.incoming = response.data.incoming
+                x.total.outgoing = response.data.outgoing
                 console.log(response);
             })
             .catch(function (error) {

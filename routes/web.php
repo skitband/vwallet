@@ -29,4 +29,5 @@ Route::get('/wallet/transactionlist/{id}', [WalletController::class, 'walletTran
 Route::resource('wallet', WalletController::class)->middleware('auth');
 
 Route::get('/transactioncreate/{id}', [TransactionController::class, 'create_transaction_wallet'])->middleware('auth');
+Route::get('/totaltransactions/{id}', [TransactionController::class, 'total_transactions'])->middleware('auth');
 Route::resource('transaction', TransactionController::class)->middleware('auth');
